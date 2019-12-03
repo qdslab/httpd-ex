@@ -1,7 +1,7 @@
 // path of the template to use
 def templatePath = 'https://github.com/qdslab/httpd-ex/blob/master/openshift/templates/httpd.json'
 // name of the template that will be created
-def templateName = 'httpd-example'
+def templateName = 'httpd'
 // NOTE, the "pipeline" directive/closure from the declarative pipeline syntax needs to include, or be nested outside,
 // and "openshift" directive/closure from the OpenShift Client Plugin for Jenkins.  Otherwise, the declarative pipeline engine
 // will not be fully engaged.
@@ -30,7 +30,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // delete everything with this template label
-                            openshift.selector("all", [ template : templateName ]).delete()
+                            openshift.selector("all", [ app : templateName ]).delete()
                             // delete any secrets with this template label
                             if (openshift.selector("secrets", templateName).exists()) {
                                 openshift.selector("secrets", templateName).delete()
@@ -46,7 +46,7 @@ pipeline {
                     openshift.withCluster() {
                         openshift.withProject() {
                             // create a new application from the templatePath
-                            openshift.newApp(templatePath)
+                            openshift.newApp(templateName)
                         }
                     }
                 } // script
